@@ -14,7 +14,8 @@ object CommandCreator {
             aliases = listOf("lgt")
             permission = "lgt.command"
             tab {
-                argument { addAll("start") }
+                argument { addAll("start", "radius") }
+                argument("radius") { add(Manager.DefaultRadius.toString()) }
             }
             execute {
                 when (args.lowerOrNull(0)) {
@@ -35,11 +36,18 @@ object CommandCreator {
                         }
                         Manager.start(players)
                     }
+                    "radius" -> {
+                        args.getOrNull(1)?.toDoubleOrNull()?.let {
+                            Manager.radius = it
+                            sender.send("&f行動可能範囲を &a$it &fにしました")
+                        } ?: sender.send("&f現在の行動可能範囲は &a${Manager.radius} &fです")
+                    }
                     else -> {
                         sender.send(
                             """
                                 &fコマンド一覧
                                 &a/$label start &7ペア行動を開始します
+                                &a/$label radius <半径> &7行動可能範囲を設定します
                             """.trimIndent()
                         )
                     }

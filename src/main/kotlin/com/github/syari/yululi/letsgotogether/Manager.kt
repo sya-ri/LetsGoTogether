@@ -1,19 +1,26 @@
 package com.github.syari.yululi.letsgotogether
 
 import com.github.syari.spigot.api.uuid.UUIDPlayer
+import org.bukkit.entity.Player
 
 object Manager {
-    private var players = setOf<Pair<UUIDPlayer, UUIDPlayer>>()
-    private var playerToPartner = mapOf<UUIDPlayer, UUIDPlayer>()
+    private var dataList = mapOf<UUIDPlayer, PairData>()
+
+    const val DefaultRadius = 3.0
+
+    var radius = DefaultRadius
 
     @OptIn(ExperimentalStdlibApi::class)
     fun start(players: Set<Pair<UUIDPlayer, UUIDPlayer>>) {
-        this.players = players
-        playerToPartner = buildMap {
+        dataList = buildMap {
             players.forEach { (player, partner) ->
-                put(player, partner)
-                put(partner, player)
+                val data = PairData(player, partner)
+                put(player, data)
+                put(partner, data)
             }
         }
     }
+
+    val Player.pairData
+        get() = dataList[UUIDPlayer.from(this)]
 }
