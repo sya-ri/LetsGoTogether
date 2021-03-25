@@ -34,8 +34,10 @@ data class PairData(private val uuidPlayer: UUIDPlayer, private val uuidPartner:
                 attribute.baseValue = if (radius < (distance + 1)) 0.02 else 0.1
             }
         }
-        drawCircle(player, partnerLocation)
-        drawCircle(partner, playerLocation)
+        if (player.vehicle != partner && partner.vehicle != player) {
+            drawCircle(player, partnerLocation)
+            drawCircle(partner, playerLocation)
+        }
     }
 
     private fun drawCircle(viewer: Player, center: Location) {

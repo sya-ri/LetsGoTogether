@@ -24,7 +24,7 @@ object CommandCreator {
             aliases = listOf("lgt")
             permission = "lgt.command"
             tab {
-                argument { addAll("start", "stop", "radius", "particle") }
+                argument { addAll("start", "stop", "radius", "particle", "ride") }
                 argument("radius") { add(Manager.DefaultRadius.toString()) }
                 argument("particle") { addAll("amount", "type") }
                 argument("particle amount") { add(Manager.DefaultParticleAmount.toString()) }
@@ -38,6 +38,7 @@ object CommandCreator {
                 ) {
                     addAll(Material.values().filter(Material::isBlock).map(Material::name))
                 }
+                argument("ride") { add(Manager.DefaultAllowRide.toString()) }
             }
             execute {
                 when (args.lowerOrNull(0)) {
@@ -125,6 +126,10 @@ object CommandCreator {
                             }
                         }
                     }
+                    "ride" -> {
+                        Manager.allowRide = Manager.allowRide.not()
+                        sender.send("&f肩車を ${if (Manager.allowRide) "&a有効化" else "&c無効化"} &fしました")
+                    }
                     else -> {
                         sender.send(
                             """
@@ -133,6 +138,7 @@ object CommandCreator {
                                 &a/$label stop &7ペア行動を終了します
                                 &a/$label radius <半径> &7行動可能範囲を設定します
                                 &a/$label particle &7パーティクルの設定を変更します
+                                &a/$label ride &7肩車の有効化を切り替えます
                             """.trimIndent()
                         )
                     }

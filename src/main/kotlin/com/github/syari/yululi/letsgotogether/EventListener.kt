@@ -5,6 +5,7 @@ import com.github.syari.spigot.api.event.Events
 import com.github.syari.spigot.api.scheduler.runTaskLater
 import com.github.syari.spigot.api.uuid.UUIDPlayer
 import com.github.syari.yululi.letsgotogether.Manager.pairData
+import org.bukkit.event.player.PlayerInteractEntityEvent
 import org.bukkit.event.player.PlayerMoveEvent
 import org.bukkit.event.player.PlayerRespawnEvent
 import org.bukkit.event.player.PlayerTeleportEvent
@@ -39,6 +40,15 @@ object EventListener : EventRegister {
                 player.pairData?.run {
                     setFollowPartner(player)
                     update()
+                }
+            }
+        }
+        event<PlayerInteractEntityEvent> {
+            val player = it.player
+            if (player.isSneaking && Manager.allowRide) {
+                val partner = player.pairData?.getPartner(player) ?: return@event
+                if (partner == it.rightClicked) {
+                    player.addPassenger(partner)
                 }
             }
         }

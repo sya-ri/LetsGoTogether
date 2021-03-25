@@ -13,11 +13,13 @@ object Manager {
 
     const val DefaultRadius = 3.0
     const val DefaultParticleAmount = 100
+    const val DefaultAllowRide = true
 
     var radius = DefaultRadius
     var particleType = Particle.REDSTONE
     var particleTypeData: Any? = Particle.DustOptions(Color.RED, 1F)
     var particleAmount = DefaultParticleAmount
+    var allowRide = DefaultAllowRide
 
     private var updateTask: BukkitTask? = null
 
