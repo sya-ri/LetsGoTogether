@@ -4,6 +4,9 @@ import com.github.syari.spigot.api.command.command
 import com.github.syari.spigot.api.command.tab.CommandTabArgument.Companion.argument
 import com.github.syari.spigot.api.config.type.data.ConfigMaterialDataType
 import com.github.syari.spigot.api.config.type.data.ConfigParticleDataType
+import com.github.syari.spigot.api.item.editItemMeta
+import com.github.syari.spigot.api.item.isUnbreakable
+import com.github.syari.spigot.api.item.itemStack
 import com.github.syari.spigot.api.uuid.UUIDPlayer
 import com.github.syari.yululi.letsgotogether.Main.Companion.plugin
 import org.bukkit.Bukkit
@@ -12,6 +15,7 @@ import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.LeatherArmorMeta
 
 object CommandCreator {
     @OptIn(ExperimentalStdlibApi::class)
@@ -49,8 +53,23 @@ object CommandCreator {
                                         onlinePlayers.randomOrNull()?.apply(onlinePlayers::remove)?.let { partner ->
                                             add(UUIDPlayer.from(player) to UUIDPlayer.from(partner))
                                             partner.teleport(player)
-                                            player.sendAction("&6&lパートナーは &a&l${partner.displayName} &6&lです")
-                                            partner.sendAction("&6&lパートナーは &a&l${player.displayName} &6&lです")
+                                            val colorCode = (0..0xFFFFFF).random()
+                                            val color = Color.fromRGB(colorCode)
+                                            val chatColor = "%6X".format(colorCode).toList().joinToString("§", "§x§")
+                                            player.setDisplayName("$chatColor${player.name}")
+                                            player.setPlayerListName("$chatColor${player.name}")
+                                            partner.setDisplayName("$chatColor${partner.name}")
+                                            partner.setPlayerListName("$chatColor${partner.name}")
+                                            player.sendAction("&6&lパートナーは &a&l${partner.name} &6&lです")
+                                            partner.sendAction("&6&lパートナーは &a&l${player.name} &6&lです")
+                                            val helmet = itemStack(Material.LEATHER_HELMET, "${chatColor}組み分け帽子").apply {
+                                                editItemMeta<LeatherArmorMeta> {
+                                                    setColor(color)
+                                                }
+                                                isUnbreakable = true
+                                            }
+                                            player.inventory.helmet = helmet
+                                            partner.inventory.helmet = helmet
                                         } ?: player.sendAction("&c&lパートナーが見つかりませんでした")
                                     }
                                 }
