@@ -11,4 +11,8 @@ class Main : JavaPlugin() {
     init {
         plugin = this
     }
+
+    override fun onEnable() {
+        CommandCreator.register()
+    }
 }
