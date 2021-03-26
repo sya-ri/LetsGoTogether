@@ -1,6 +1,7 @@
 package com.github.syari.yululi.letsgotogether
 
 import com.github.syari.spigot.api.uuid.UUIDPlayer
+import org.bukkit.GameMode
 import org.bukkit.Location
 import org.bukkit.attribute.Attribute
 import org.bukkit.entity.Player
@@ -13,6 +14,7 @@ data class PairData(private val uuidPlayer: UUIDPlayer, private val uuidPartner:
     fun update() {
         val player = uuidPlayer.player ?: return
         val partner = uuidPartner.player ?: return
+        if (player.gameMode == GameMode.SPECTATOR || partner.gameMode == GameMode.SPECTATOR) return
         val radius = Manager.radius
         val playerLocation = player.location
         val partnerLocation = partner.location
